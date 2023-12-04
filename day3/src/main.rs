@@ -1,7 +1,4 @@
-use std::{
-    cmp::{max, min},
-    fs,
-};
+use std::{cmp::min, fs};
 
 fn main() {
     first_half("example");
@@ -56,18 +53,18 @@ fn parse_symbols(path: &str) -> Vec<Vec<usize>> {
         .collect::<Vec<_>>()
 }
 
-fn parse_gear_symbols(path: &str) -> Vec<Vec<usize>>{
+fn parse_gear_symbols(path: &str) -> Vec<Vec<usize>> {
     fs::read_to_string(path)
-    .unwrap()
-    .lines()
-    .map(|line| {
-        line.chars()
-            .enumerate()
-            .filter(|(_, c)|  *c == '*')
-            .map(|(x, _)| x)
-            .collect::<Vec<_>>()
-    })
-    .collect::<Vec<_>>()
+        .unwrap()
+        .lines()
+        .map(|line| {
+            line.chars()
+                .enumerate()
+                .filter(|(_, c)| *c == '*')
+                .map(|(x, _)| x)
+                .collect::<Vec<_>>()
+        })
+        .collect::<Vec<_>>()
 }
 
 fn parse_numbers(path: &str) -> Vec<Vec<PartNumber>> {
@@ -131,23 +128,22 @@ fn second_half(path: &str) {
     let gears = parse_gear_symbols(path);
     let part_numbers = parse_numbers(path);
     let mut sum = 0;
-    for y in 0..gears.len(){
-        for gear in &gears[y]{
+    for y in 0..gears.len() {
+        for gear in &gears[y] {
             let y_begin = y.checked_sub(1).unwrap_or_default();
             let y_end = min(gears.len() - 1, y + 1);
             let mut adjacent = Vec::new();
             for y in y_begin..=y_end {
-                for part_number in &part_numbers[y]{
-                    if part_number.is_in_range(*gear){
+                for part_number in &part_numbers[y] {
+                    if part_number.is_in_range(*gear) {
                         adjacent.push(part_number);
                     }
                 }
             }
-            if adjacent.len() == 2{
+            if adjacent.len() == 2 {
                 sum += adjacent[0].value * adjacent[1].value;
             }
         }
     }
     println!("{path}: {sum}");
-
 }
